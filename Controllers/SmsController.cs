@@ -12,8 +12,9 @@ namespace CalculatePi.Controllers
         public TwiMLResult Index(SmsRequest incomingMessage)
         {
             int n;
+            bool parsed = int.TryParse(incomingMessage.Body, out n);
             var messagingResponse = new MessagingResponse();
-            if (int.TryParse(incomingMessage.Body, out n))
+            if (parsed && n >= 0)
             {
                 FindPi calc = new FindPi(n);
                 double pi = calc.EstimatePi(n);
@@ -21,7 +22,7 @@ namespace CalculatePi.Controllers
             }
             else
             {
-                messagingResponse.Message("Please input an integer.");
+                messagingResponse.Message("Please input a postive integer.");
             }
 
             return TwiML(messagingResponse);
